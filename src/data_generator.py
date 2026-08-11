@@ -44,7 +44,7 @@ os.makedirs(os.path.dirname(output_csv), exist_ok=True)
 headers = [
     "Run_ID", "Feed_Temp_K", "Feed_Press_Pa", "Benzene_Frac", "Stages", 
     "Feed_Stage", "Reflux_Ratio", "Bottoms_Rate", 
-    "x_D_Benzene", "x_B_Benzene", "Q_C_kW", "Q_R_kW", "Converged"
+    "F_mol_s", "D_mol_s", "x_D_Benzene", "x_B_Benzene", "Q_C_kW", "Q_R_kW", "Converged"
 ]
 
 with open(output_csv, mode='w', newline='') as file:
@@ -96,24 +96,26 @@ for i, point in enumerate(scaled_samples):
         interf.CalculateFlowsheet(sim, None)
         
         if sim.Solved:
+            F_mol = feed.GetMolarFlow()
+            D_mol = distillate.GetMolarFlow()
             x_D = distillate.GetPhaseComposition(0)[0] 
             x_B = bottoms.GetPhaseComposition(0)[0]
             Q_C = cond_duty.EnergyFlow
             Q_R = reb_duty.EnergyFlow
             converged = True
         else:
-            x_D, x_B, Q_C, Q_R = 0, 0, 0, 0
+            F_mol, D_mol, x_D, x_B, Q_C, Q_R = 0, 0, 0, 0, 0, 0
             converged = False
 
     except Exception as e:
         print(f"CRASH ON RUN {i+1}: {e}")
-        x_D, x_B, Q_C, Q_R = 0, 0, 0, 0
+        F_mol, D_mol, x_D, x_B, Q_C, Q_R = 0, 0, 0, 0, 0, 0
         converged = False
 
     # Checkpoint to CSV
     row = [
         i+1, t_feed, p_feed, bz_frac, stages, f_stage, reflux, b_rate, 
-        x_D, x_B, Q_C, Q_R, converged
+        F_mol, D_mol, x_D, x_B, Q_C, Q_R, converged
     ]
     with open(output_csv, mode='a', newline='') as file:
         writer = csv.writer(file)
