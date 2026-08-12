@@ -23,84 +23,12 @@ except Exception as e:
     st.stop()
 
 # --- Main UI ---
-# Premium Custom CSS
-st.markdown("""
-<style>
-    /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-    
-    html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
-    }
-    
-    /* Subtle Gradient Background */
-    .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-        color: #e2e8f0;
-    }
-    
-    /* Sidebar Styling */
-    section[data-testid="stSidebar"] {
-        background-color: rgba(15, 23, 42, 0.7);
-        backdrop-filter: blur(10px);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    /* Headings */
-    h1, h2, h3 {
-        background: -webkit-linear-gradient(45deg, #60a5fa, #c084fc);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 700 !important;
-    }
-    
-    /* Metric Cards Glassmorphism */
-    div[data-testid="metric-container"] {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-    }
-    
-    div[data-testid="metric-container"]:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(96, 165, 250, 0.5);
-    }
-    
-    div[data-testid="metric-container"] label {
-        color: #94a3b8 !important;
-        font-weight: 600;
-        font-size: 1rem;
-    }
-    
-    div[data-testid="metric-container"] div {
-        color: #f8fafc !important;
-        font-weight: 700;
-    }
-    
-    /* Sliders styling */
-    .stSlider > div > div > div {
-        background-color: #3b82f6 !important;
-    }
-    
-    /* Dividers */
-    hr {
-        border-color: rgba(255, 255, 255, 0.1) !important;
-    }
-</style>
-""", unsafe_allow_html=True)
-
 st.title("⚗️ Binary Distillation Surrogate Model")
 st.markdown("""
-<div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border-left: 4px solid #60a5fa; margin-bottom: 20px;">
-    Welcome to the interactive <b>Benzene-Toluene Distillation</b> surrogate model. <br>
-    This dashboard uses an <b>XGBoost Regressor (99.6% Accuracy)</b> trained on 5,000 rigorous DWSIM simulations to instantly predict product purities and energy requirements.
-</div>
-""", unsafe_allow_html=True)
+Welcome to the interactive **Benzene-Toluene Distillation** surrogate model. 
+
+This dashboard acts as a virtual chemistry lab. It uses an **XGBoost Regressor** trained on 5,000 rigorous DWSIM simulations to instantly predict the thermodynamic behavior of the column.
+""")
 
 st.divider()
 

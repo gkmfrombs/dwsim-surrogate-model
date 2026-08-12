@@ -26,7 +26,8 @@ except Exception as e:
 st.title("⚗️ Binary Distillation Surrogate Model")
 st.markdown("""
 Welcome to the interactive **Benzene-Toluene Distillation** surrogate model. 
-This dashboard uses an **XGBoost Regressor (99.6% Accuracy)** trained on 5,000 rigorous DWSIM simulations to instantly predict product purities and energy requirements.
+
+This dashboard acts as a virtual chemistry lab. It uses an **XGBoost Regressor** trained on 5,000 rigorous DWSIM simulations to instantly predict the thermodynamic behavior of the column.
 """)
 
 st.divider()
