@@ -77,14 +77,16 @@ st.subheader("📊 Instant Predictions")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.info("### 💧 Product Purities")
-    st.metric("Distillate Benzene Purity ($x_D$)", f"{xD:.4f}")
-    st.metric("Bottoms Benzene Purity ($x_B$)", f"{xB:.4f}")
+    st.info("### 💧 Product Purities (Mole %)")
+    st.markdown("*This is the concentration of Benzene in the product streams.*")
+    st.metric("Distillate (Top) Benzene Purity ($x_D$)", f"{xD * 100:.2f}%")
+    st.metric("Bottoms Benzene Purity ($x_B$)", f"{xB * 100:.2f}%")
 
 with col2:
-    st.success("### ⚡ Energy Duties")
-    st.metric("Condenser Duty ($Q_C$)", f"{Qc:.2f} kW")
-    st.metric("Reboiler Duty ($Q_R$)", f"{Qr:.2f} kW")
+    st.success("### ⚡ Energy Duties (kW)")
+    st.markdown("*This is the continuous power required to run the column.*")
+    st.metric("Condenser Cooling Duty ($Q_C$)", f"{Qc:.2f} kW")
+    st.metric("Reboiler Heating Duty ($Q_R$)", f"{Qr:.2f} kW")
 
 st.divider()
 
