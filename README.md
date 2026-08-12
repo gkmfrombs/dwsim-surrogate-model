@@ -1,5 +1,7 @@
 # DWSIM Surrogate Modeling Project (FOSSEE Submission)
 
+**🚀 Live Interactive App:** [Click here to view the live Surrogate Model!](https://dwsim-surrogate-model-gkm-thx8crs2gqn4ubrlhj4lco.streamlit.app/)
+
 This repository contains a full Machine Learning surrogate model of a Benzene-Toluene binary distillation column, developed using Python and DWSIM.
 
 ## Repository Structure & FOSSEE Deliverables
