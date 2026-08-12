@@ -4,7 +4,7 @@
 ---
 
 ## 1. Problem Statement
-The objective of this project is to develop a robust, physically consistent surrogate model for a binary distillation column using rigorous simulation data. Distillation columns are highly non-linear and computationally expensive to simulate in real-time. By training Machine Learning models on data generated from DWSIM, we aim to build a lightning-fast "surrogate" capable of predicting product purities ($x_D$, $x_B$) and energy duties ($Q_C$, $Q_R$) instantaneously based on changing operating conditions.
+The objective of this project is to develop a robust, physically consistent surrogate model for a binary distillation column using rigorous simulation data. Distillation columns are highly non-linear and computationally expensive to simulate in real-time. By training Machine Learning models on data generated from DWSIM, this project aims to build a computationally efficient surrogate capable of predicting product purities ($x_D$, $x_B$) and energy duties ($Q_C$, $Q_R$) instantaneously based on operating conditions.
 
 ## 2. DWSIM Flowsheet & Model Description
 - **System:** Benzene - Toluene Binary Mixture
@@ -13,10 +13,10 @@ The objective of this project is to develop a robust, physically consistent surr
 - **Base Conditions:** Feed flow of 100 mol/s, varying feed composition, temperature, pressure, reflux ratio, and theoretical stages.
 
 ## 3. Dataset Generation Strategy
-The dataset was procedurally generated using an automated Python-CLR bridge to interface with DWSIM headlessly.
-- **Sampling Method:** Latin Hypercube Sampling (LHS) was used to explore the 7-dimensional parameter space efficiently, ensuring even distribution and eliminating edge-case clustering.
+The dataset was procedurally generated using a Python-CLR bridge to interface with DWSIM headlessly.
+- **Sampling Method:** Latin Hypercube Sampling (LHS) was utilized to explore the 7-dimensional parameter space efficiently, ensuring even distribution.
 - **Dataset Size:** 5,000 independent simulation runs were executed. 
-- **Physical Validity:** Non-converged simulations were discarded. Post-generation, the dataset was subjected to strict mass-balance validation ($F \cdot z = D \cdot x_D + B \cdot x_B$) to remove thermodynamically impossible anomalies. The final, pristine dataset contains 1,943 validated rows.
+- **Physical Validity:** Non-converged simulations were discarded. Post-generation, the dataset was subjected to strict mass-balance validation ($F \cdot z = D \cdot x_D + B \cdot x_B$) to remove thermodynamically inconsistent anomalies. The final validated dataset contains 1,943 rows.
 
 ### Operating Conditions (Input Variables)
 1. Feed Temperature ($290 - 350$ K)
@@ -34,11 +34,11 @@ The dataset was procedurally generated using an automated Python-CLR bridge to i
 4. Reboiler Duty ($Q_R$ in kW)
 
 ## 4. Data Preprocessing
-- **Splitting:** 80% Training, 20% Testing (to ensure generalization on unseen data).
-- **Scaling:** `StandardScaler` was applied to normalize all input features (zero mean, unit variance), preventing features with large magnitudes (e.g., Pressure in Pascal) from dominating the learning algorithms.
+- **Splitting:** An 80/20 train-test split was applied to ensure evaluation on unseen data.
+- **Scaling:** `StandardScaler` was used to normalize all input features (zero mean, unit variance), preventing features with large magnitudes from skewing the gradient descent algorithms.
 
 ## 5. Machine Learning Implementation
-Three distinct modeling approaches were compared:
+Three distinct modeling approaches were evaluated:
 
 1. **Multiple Linear Regression (Baseline):** 
    - A standard baseline to check for linear thermodynamic relationships.
@@ -55,15 +55,15 @@ Three distinct modeling approaches were compared:
 | XGBoost (Tuned) | 99.66% | 99.5% | 99.5% | 99.8% | 99.7% | 0.0036 |
 | PyTorch PINN | **99.76%** | **99.7%** | **99.6%** | **99.8%** | **99.8%** | **0.0025** |
 
-*Note: Linear regression adequately predicts Duties (energy requires mostly linear scaling) but fails dramatically on Purity (which features highly non-linear vapor-liquid equilibrium curves).*
+*Note: Linear regression adequately predicts duties as they scale mostly linearly with flow, but fails on purities which exhibit highly non-linear vapor-liquid equilibrium curves.*
 
 ## 7. Physical Consistency and Robustness (Explainable AI)
-To ensure the models are not simply "overfitting" or finding mathematical coincidences, we conducted a Parametric Sensitivity Analysis using the XGBoost model.
-By holding all variables perfectly constant and sweeping the **Reflux Ratio** from $1.0 \rightarrow 10.0$, the surrogate model correctly predicted a massive upward asymptotic curve for Condenser Duty. This physically proves the AI correctly learned that higher internal liquid traffic necessitates significantly more cooling capacity.
+To ensure the models achieved true thermodynamic consistency rather than arbitrary mathematical fitting, a Parametric Sensitivity Analysis was conducted.
+By holding all variables constant at their median and sweeping the **Reflux Ratio** from $1.0$ to $10.0$, the surrogate model correctly predicted a rapid asymptotic increase for Condenser Duty. This physically proves the model correctly identified that higher internal liquid traffic necessitates significantly more cooling capacity.
 
 Furthermore, SHAP (SHapley Additive exPlanations) analysis confirmed that the number of stages and reflux ratio act as the highest mathematical drivers for output purity, perfectly aligning with distillation fundamentals.
 
-## 8. Final Conclusion
-The **PyTorch Physics-Informed Neural Network (PINN)** is identified as the best surrogate model. Not only does it achieve the highest statistical accuracy (99.76% R²), but its custom loss function explicitly guarantees that the answers it generates obey fundamental mass-balance laws. 
+## 8. Conclusion
+The **PyTorch Physics-Informed Neural Network (PINN)** was identified as the best surrogate model. Not only does it achieve the highest statistical accuracy (99.76% R²), but its custom loss function explicitly guarantees that the generated predictions obey fundamental mass-balance laws. 
 
-For reviewers interested in exploring the model interactively, an accompanying `app.py` Streamlit dashboard is provided to run live, real-time predictions.
+To demonstrate the practical utility of the model, a Streamlit dashboard (`app.py`) is included in the project repository for real-time interactive inference.
